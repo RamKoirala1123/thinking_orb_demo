@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ai_thinking_orb/ai_thinking_orb.dart';
+import 'package:orb_animations/orb_animations.dart';
 
 void main() => runApp(const OrbsDemoApp());
 
