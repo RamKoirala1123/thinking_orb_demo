@@ -127,43 +127,74 @@ class _ControlsBar extends StatelessWidget {
       color: Theme.of(context).colorScheme.surfaceContainerHigh,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 320,
-              child: Row(
-                children: [
-                  const Text('Speed'),
-                  Expanded(
-                    child: Slider(
-                      min: 0.25,
-                      max: 3,
-                      value: speed,
-                      label: '${speed.toStringAsFixed(2)}x',
-                      onChanged: onSpeedChanged,
-                    ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompact = constraints.maxWidth < 520;
+
+            final speedControl = Row(
+              children: [
+                Text(
+                  'Speed',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Slider(
+                    min: 0.25,
+                    max: 3.0,
+                    value: speed,
+                    label: '${speed.toStringAsFixed(2)}x',
+                    onChanged: onSpeedChanged,
                   ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+                ),
+                SizedBox(
+                  width: 44,
+                  child: Text(
+                    '${speed.toStringAsFixed(2)}x',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
+              ],
+            );
+
+            final actionButtons = Row(
+              mainAxisSize: isCompact ? MainAxisSize.max : MainAxisSize.min,
+              mainAxisAlignment: isCompact
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.end,
               children: [
                 FilledButton.tonalIcon(
                   onPressed: onPauseToggled,
                   icon: Icon(paused ? Icons.play_arrow : Icons.pause),
                   label: Text(paused ? 'Resume' : 'Pause'),
                 ),
-                const SizedBox(width: 8),
                 IconButton(
                   onPressed: onToggleTheme,
                   icon: Icon(dark ? Icons.light_mode : Icons.dark_mode),
                 ),
               ],
-            ),
-          ],
+            );
+
+            if (isCompact) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  speedControl,
+                  const SizedBox(height: 8),
+                  actionButtons,
+                ],
+              );
+            }
+
+            return Row(
+              children: [
+                Expanded(child: speedControl),
+                const SizedBox(width: 16),
+                actionButtons,
+              ],
+            );
+          },
         ),
       ),
     );
